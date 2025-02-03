@@ -18,13 +18,9 @@ jobs:
         echo "Listing repository root contents"
         ls -l
 
-        # List the contents of the MMB-Weekly-Challenge directory
-        echo "Listing MMB-Weekly-Challenge folder contents"
-        ls -l ./MMB-Weekly-Challenge
-
         # List the contents of the weekly_challenges directory
         echo "Listing weekly_challenges folder contents"
-        ls -l ./MMB-Weekly-Challenge/weekly_challenges
+        ls -l ./weekly_challenges
 
     - name: Rotate Image
       run: |
