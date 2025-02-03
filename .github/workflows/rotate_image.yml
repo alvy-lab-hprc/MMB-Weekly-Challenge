@@ -14,19 +14,23 @@ jobs:
 
     - name: Verify Folder Structure
       run: |
+        # List the contents of the current directory (repository root)
+        echo "Listing repository root contents"
+        ls -l
+
         # List the contents of the MMB-Weekly-Challenge directory
         echo "Listing MMB-Weekly-Challenge folder contents"
-        ls -l MMB-Weekly-Challenge
+        ls -l ./MMB-Weekly-Challenge
 
         # List the contents of the weekly_challenges directory
         echo "Listing weekly_challenges folder contents"
-        ls -l MMB-Weekly-Challenge/weekly_challenges
+        ls -l ./MMB-Weekly-Challenge/weekly_challenges
 
     - name: Rotate Image
       run: |
         # Define paths
-        CHALLENGE_FOLDER="MMB-Weekly-Challenge/weekly_challenges"
-        TEST_FOLDER="MMB-Weekly-Challenge/test"
+        CHALLENGE_FOLDER="./MMB-Weekly-Challenge/weekly_challenges"
+        TEST_FOLDER="./MMB-Weekly-Challenge/test"
         TEST_FILE="$TEST_FOLDER/Current.png"
 
         # Ensure the test folder exists
