@@ -28,9 +28,9 @@ jobs:
 
     - name: Rotate Image
       run: |
-        # Define paths
-        CHALLENGE_FOLDER="./MMB-Weekly-Challenge/weekly_challenges"
-        TEST_FOLDER="./MMB-Weekly-Challenge/test"
+        # Define paths relative to the root of the repository
+        CHALLENGE_FOLDER="weekly_challenges"
+        TEST_FOLDER="test"
         TEST_FILE="$TEST_FOLDER/Current.png"
 
         # Ensure the test folder exists
