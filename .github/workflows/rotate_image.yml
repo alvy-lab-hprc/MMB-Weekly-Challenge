@@ -17,7 +17,7 @@ jobs:
         # Define paths
         CHALLENGE_FOLDER="MMB-Weekly-Challenge/weekly_challenges"
         TEST_FOLDER="MMB-Weekly-Challenge/test"
-        TEST_FILE="$TEST_FOLDER/Current"
+        TEST_FILE="$TEST_FOLDER/Current.png"  # Updated to reflect the correct file name
 
         # Ensure the test folder exists
         mkdir -p "$TEST_FOLDER"
@@ -48,13 +48,11 @@ jobs:
         # Get the next image filename
         NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
         
-        # Copy the next image as 'Current'
+        # Copy the next image as 'Current.png' (with .png extension)
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
     - name: Commit and Push Changes
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add .  # Adds changes to the staging area
-        git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
-        git push
+   
