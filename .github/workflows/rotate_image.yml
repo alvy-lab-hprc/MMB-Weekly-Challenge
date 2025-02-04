@@ -7,9 +7,42 @@ jobs:
 
     - name: Rotate Image
       run: |
-        # Your image rotation logic
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the stored token
+        # Define paths relative to the root of the repository
+        CHALLENGE_FOLDER="weekly_challenges"
+        TEST_FOLDER="test"
+        TEST_FILE="$TEST_FOLDER/Current.png"
+
+        # Ensure the test folder exists
+        mkdir -p "$TEST_FOLDER"
+
+        # Get the list of challenge images sorted alphabetically
+        IMAGES=($(ls "$CHALLENGE_FOLDER" | sort))
+        
+        # Read the last used image (if it exists)
+        if [ -f "$TEST_FILE" ]; then
+          LAST_USED=$(basename $(readlink -f "$TEST_FILE"))
+          LAST_INDEX=-1
+          
+          # Find the index of the last used image
+          for i in "${!IMAGES[@]}"; do
+            if [[ "${IMAGES[$i]}" == "$LAST_USED" ]]; then
+              LAST_INDEX=$i
+              break
+            fi
+          done
+
+          # Determine the next image index (cycle through)
+          NEXT_INDEX=$(( (LAST_INDEX + 1) % ${#IMAGES[@]} ))
+        else
+          # Start with the first image if no history exists
+          NEXT_INDEX=0
+        fi
+
+        # Get the next image filename
+        NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
+        
+        # Copy the next image as 'Current.png'
+        cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
     - name: Commit and Push Changes
       run: |
@@ -17,7 +50,7 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
         git add .
-        git commit -m "Updated challenge image"
+        git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
         git push
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Make sure the token is available
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Ensure the token is available
