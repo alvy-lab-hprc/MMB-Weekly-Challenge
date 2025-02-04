@@ -27,6 +27,7 @@ jobs:
         CHALLENGE_FOLDER="weekly_challenges"
         TARGET_FOLDER="target"
         TEST_FILE="$TARGET_FOLDER/Current.png"
+        LAST_USED_FILE="$TARGET_FOLDER/last_used.txt"  # Store the last used image name
         
         # Ensure target folder exists
         mkdir -p "$TARGET_FOLDER"
@@ -34,31 +35,34 @@ jobs:
         # Get list of images sorted by name (expected to be WC-1.png to WC-8.png)
         IMAGES=($(ls "$CHALLENGE_FOLDER" | sort))
 
-        # If Current.png exists, determine the last used image
-        if [ -f "$TEST_FILE" ]; then
-          LAST_USED=$(basename $(readlink -f "$TEST_FILE"))
-          LAST_INDEX=-1
-          
-          # Find the index of the last used image
-          for i in "${!IMAGES[@]}"; do
-            if [[ "${IMAGES[$i]}" == "$LAST_USED" ]]; then
-              LAST_INDEX=$i
-              break
-            fi
-          done
-
-          # Determine the next image index (cycle through images)
-          NEXT_INDEX=$(( (LAST_INDEX + 1) % ${#IMAGES[@]} ))
+        # If last_used.txt exists, get the last used image from it
+        if [ -f "$LAST_USED_FILE" ]; then
+          LAST_USED=$(cat "$LAST_USED_FILE")
         else
-          # Start with the first image if no history exists
-          NEXT_INDEX=0
+          # If last_used.txt doesn't exist, start with WC-1.png
+          LAST_USED="WC-1.png"
         fi
 
+        # Find the index of the last used image
+        LAST_INDEX=-1
+        for i in "${!IMAGES[@]}"; do
+          if [[ "${IMAGES[$i]}" == "$LAST_USED" ]]; then
+            LAST_INDEX=$i
+            break
+          fi
+        done
+
+        # Determine the next image index (cycle through images)
+        NEXT_INDEX=$(( (LAST_INDEX + 1) % ${#IMAGES[@]} ))
+        
         # Get the next image filename
         NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
 
         # Copy the next image as 'Current.png'
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
+
+        # Update the last used image
+        echo "$NEXT_IMAGE" > "$LAST_USED_FILE"
 
     - name: Commit and Push Changes
       run: |
