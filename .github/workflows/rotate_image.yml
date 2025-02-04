@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # Use the default token for push permissions
 
     - name: Verify Folder Structure
       run: |
@@ -68,3 +70,5 @@ jobs:
         git add .  # Adds changes to the staging area
         git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
         git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # This token is automatically created for your repo
