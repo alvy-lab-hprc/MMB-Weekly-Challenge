@@ -76,7 +76,7 @@ jobs:
         echo "$NEXT_IMAGE" > "$LAST_USED_FILE"
         
         # Check if the files were updated
-        echo "Updated Current.png: $(cat $TEST_FILE)"
+        echo "Updated Current.png: $(file $TEST_FILE)"
         echo "Updated last_used.txt: $(cat $LAST_USED_FILE)"
 
     - name: Commit and Push Changes
