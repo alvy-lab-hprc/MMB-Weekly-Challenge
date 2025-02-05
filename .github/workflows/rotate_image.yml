@@ -23,7 +23,7 @@ jobs:
         echo "Listing target folder contents"
         ls -l ./target
 
-    - name: Debugging: Check if Workflow is Triggered
+    - name: Debugging Check if Workflow is Triggered
       run: |
         echo "Checking if the workflow is being triggered"
         echo "Current Date and Time: $(date)"
