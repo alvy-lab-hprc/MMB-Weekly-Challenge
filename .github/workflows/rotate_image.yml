@@ -69,7 +69,10 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Ensure we're up to date with the remote before committing
+        # Stash any local changes (if any) to ensure a clean working directory
+        git stash push --include-untracked
+        
+        # Pull the latest changes from the remote (with rebase)
         git pull origin main --rebase  # Ensure we're up to date with the remote
         
         # Add and commit changes
