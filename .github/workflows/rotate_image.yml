@@ -20,6 +20,8 @@ jobs:
         ls -l
         echo "Listing weekly_challenges folder contents"
         ls -l ./weekly_challenges
+        echo "Listing target folder contents"
+        ls -l ./target
 
     - name: Rotate Image
       run: |
@@ -35,6 +37,9 @@ jobs:
         # Get list of images sorted by name (expected to be WC-1.png to WC-8.png)
         IMAGES=($(ls "$CHALLENGE_FOLDER" | sort))
 
+        # Check the image list
+        echo "Available images in '$CHALLENGE_FOLDER': ${IMAGES[@]}"
+
         # If last_used.txt exists, get the last used image from it
         if [ -f "$LAST_USED_FILE" ]; then
           LAST_USED=$(cat "$LAST_USED_FILE")
@@ -42,6 +47,9 @@ jobs:
           # If last_used.txt doesn't exist, start with WC-1.png
           LAST_USED="WC-1.png"
         fi
+
+        # Check the last used image
+        echo "Last used image: $LAST_USED"
 
         # Find the index of the last used image
         LAST_INDEX=-1
@@ -54,15 +62,22 @@ jobs:
 
         # Determine the next image index (cycle through images)
         NEXT_INDEX=$(( (LAST_INDEX + 1) % ${#IMAGES[@]} ))
-        
+
         # Get the next image filename
         NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
+        
+        # Check the next image
+        echo "Next image to copy: $NEXT_IMAGE"
 
         # Copy the next image as 'Current.png'
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
         # Update the last used image file with the new image
         echo "$NEXT_IMAGE" > "$LAST_USED_FILE"
+        
+        # Check if the files were updated
+        echo "Updated Current.png: $(cat $TEST_FILE)"
+        echo "Updated last_used.txt: $(cat $LAST_USED_FILE)"
 
     - name: Commit and Push Changes
       run: |
