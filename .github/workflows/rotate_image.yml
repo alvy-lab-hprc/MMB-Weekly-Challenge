@@ -27,6 +27,7 @@ jobs:
       run: |
         echo "Checking if the workflow is being triggered"
         echo "Current Date and Time: $(date)"
+        echo "Checking if we are running as expected"
         echo "Scheduled run time: $(date)" >> scheduled_run_log.txt
 
     - name: Rotate Image
@@ -79,29 +80,27 @@ jobs:
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
         # Update the last used image file with the new image
-        echo "$NEXT_IMAGE $(date)" > "$LAST_USED_FILE"
-        
-        # Simulate a change (update timestamp or metadata)
-        touch "$TEST_FILE"
+        echo "$NEXT_IMAGE" > "$LAST_USED_FILE"
         
         # Check if the files were updated
         echo "Updated Current.png: $(file $TEST_FILE)"
         echo "Updated last_used.txt: $(cat $LAST_USED_FILE)"
 
-    - name: Commit and Push Changes
+    - name: Force Commit with Dummy Update
       run: |
+        # Create a dummy update file with current timestamp (or other content)
+        echo "Dummy update to trigger commit at $(date)" > dummy_update.txt
+
+        # Git configuration for committing
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Ensure changes are added (force add all files in the repository)
-        git add . 
-        
-        # Check the status to verify changes
-        git status
-        
-        # Commit changes, or force commit if there's nothing to commit
-        git commit -m "Updated challenge image to $NEXT_IMAGE" || git commit --allow-empty -m "Forcing commit to update Current.png"
-        
+        # Add all changes (including the dummy file)
+        git add .
+
+        # Commit changes (force commit if there's nothing to commit)
+        git commit -m "Updated challenge image to $NEXT_IMAGE and dummy update" || git commit --allow-empty -m "Forcing commit to update Current.png"
+
         # Push changes to the repository
         git push origin main
       env:
