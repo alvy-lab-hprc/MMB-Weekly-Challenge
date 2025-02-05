@@ -84,8 +84,8 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Ensure Current.png is added to Git if it's not already tracked
-        git add "$TEST_FILE"
+        # Ensure changes are added (force add all files in the repository)
+        git add .
         
         # Stash any local changes (if any) to ensure a clean working directory
         git stash push --include-untracked
@@ -100,3 +100,4 @@ jobs:
         git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Authenticate using GitHub Secrets
+
