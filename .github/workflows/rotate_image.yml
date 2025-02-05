@@ -65,6 +65,12 @@ jobs:
 
         # Get the next image filename
         NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
+
+        # If the next image is the same as the current one, find the next one
+        while [[ "$NEXT_IMAGE" == "$LAST_USED" ]]; do
+          NEXT_INDEX=$(( (NEXT_INDEX + 1) % ${#IMAGES[@]} ))
+          NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
+        done
         
         # Check the next image
         echo "Next image to copy: $NEXT_IMAGE"
