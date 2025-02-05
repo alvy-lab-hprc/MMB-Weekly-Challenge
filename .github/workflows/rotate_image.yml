@@ -84,17 +84,17 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
+        # Ensure Current.png is added to Git if it's not already tracked
+        git add "$TEST_FILE"
+        
         # Stash any local changes (if any) to ensure a clean working directory
         git stash push --include-untracked
         
         # Pull the latest changes from the remote (with rebase)
         git pull origin main --rebase  # Ensure we're up to date with the remote
         
-        # Add and commit changes
-        git add .  
-        
-        # Commit changes, or echo "No changes to commit" if there's nothing to commit
-        git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
+        # Commit changes, or force commit if there's nothing to commit
+        git commit -m "Updated challenge image to $NEXT_IMAGE" || git commit --allow-empty -m "No file changes, but forcing commit"
         
         # Push changes to the repository
         git push origin main
