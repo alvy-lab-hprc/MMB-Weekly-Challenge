@@ -2,7 +2,7 @@ name: Rotate Weekly Challenge Image
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs every 5 minutes
+    - cron: '30 5 * * 0,2'  # Runs at 5:30 AM UTC on Sundays (11:30 PM CST) and Tuesdays (11:30 PM CST)
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
@@ -69,8 +69,11 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
+        # Fetch the latest changes from the remote before pushing
+        git pull origin main --rebase  # Ensure we're up to date with the remote
+        
         # Add all changes (including last_used.txt)
-        git add .  
+        git add .
         
         # Commit changes, or echo "No changes to commit" if there's nothing to commit
         git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
