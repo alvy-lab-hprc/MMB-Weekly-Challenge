@@ -72,8 +72,8 @@ jobs:
         # Copy the next image as 'Current.png'
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
-        # Update the last used image file with the new image
-        echo "$NEXT_IMAGE" > "$LAST_USED_FILE"
+        # Update the last used image file with the new image and add a timestamp
+        echo "$NEXT_IMAGE $(date)" > "$LAST_USED_FILE"
         
         # Check if the files were updated
         echo "Updated Current.png: $(file $TEST_FILE)"
@@ -85,7 +85,7 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
         # Ensure changes are added (force add all files in the repository)
-        git add .
+        git add . 
         
         # Check the status to verify changes
         git status
