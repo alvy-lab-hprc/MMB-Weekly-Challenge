@@ -2,7 +2,7 @@ name: Rotate Weekly Challenge Image
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"  # Every 5 minutes
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
@@ -60,25 +60,24 @@ jobs:
           fi
         done
 
+        # If the index is not found, set it to 0 (start at the first image)
+        if [ $LAST_INDEX -eq -1 ]; then
+          LAST_INDEX=0
+        fi
+
         # Determine the next image index (cycle through images)
         NEXT_INDEX=$(( (LAST_INDEX + 1) % ${#IMAGES[@]} ))
 
         # Get the next image filename
         NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
 
-        # If the next image is the same as the current one, find the next one
-        while [[ "$NEXT_IMAGE" == "$LAST_USED" ]]; do
-          NEXT_INDEX=$(( (NEXT_INDEX + 1) % ${#IMAGES[@]} ))
-          NEXT_IMAGE="${IMAGES[$NEXT_INDEX]}"
-        done
-        
-        # Check the next image
+        # Check if the next image is different
         echo "Next image to copy: $NEXT_IMAGE"
 
         # Copy the next image as 'Current.png'
         cp "$CHALLENGE_FOLDER/$NEXT_IMAGE" "$TEST_FILE"
 
-        # Update the last used image file with the new image and add a timestamp
+        # Update the last used image file with the new image and timestamp
         echo "$NEXT_IMAGE $(date)" > "$LAST_USED_FILE"
         
         # Check if the files were updated
