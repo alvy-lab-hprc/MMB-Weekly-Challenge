@@ -68,14 +68,15 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Fetch the latest changes from the remote before pushing
+
+        # Reset any local changes to ensure a clean working directory
+        git reset --hard
+
+        # Pull the latest changes from the remote (with rebase)
         git pull origin main --rebase  # Ensure we're up to date with the remote
-        
-        # Add all changes (including last_used.txt)
+
+        # Add and commit changes
         git add .
-        
-        # Commit changes, or echo "No changes to commit" if there's nothing to commit
         git commit -m "Updated challenge image to $NEXT_IMAGE" || echo "No changes to commit"
         
         # Push changes to the repository
