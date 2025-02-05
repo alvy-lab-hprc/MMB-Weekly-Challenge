@@ -2,7 +2,7 @@ name: Rotate Weekly Challenge Image
 
 on:
   schedule:
-    - cron: '30 16 * * *'  # Runs at 4:30 PM UTC (10:30 AM CST)
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
