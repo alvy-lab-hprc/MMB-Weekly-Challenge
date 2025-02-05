@@ -87,17 +87,13 @@ jobs:
         # Ensure changes are added (force add all files in the repository)
         git add .
         
-        # Stash any local changes (if any) to ensure a clean working directory
-        git stash push --include-untracked
-        
-        # Pull the latest changes from the remote (with rebase)
-        git pull origin main --rebase  # Ensure we're up to date with the remote
+        # Check the status to verify changes
+        git status
         
         # Commit changes, or force commit if there's nothing to commit
-        git commit -m "Updated challenge image to $NEXT_IMAGE" || git commit --allow-empty -m "No file changes, but forcing commit"
+        git commit -m "Updated challenge image to $NEXT_IMAGE" || git commit --allow-empty -m "Forcing commit to update Current.png"
         
         # Push changes to the repository
         git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Authenticate using GitHub Secrets
-
